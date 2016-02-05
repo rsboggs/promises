@@ -101,11 +101,18 @@ var addNewUserToDatabaseAsync = function(user) {
 // HINT: We already wrote some similar promise returning functions
 var pluckFirstLineFromFileAsync = require('./promiseConstructor').pluckFirstLineFromFileAsync;
 var getGitHubProfileAsync = require('./promisification').getGitHubProfileAsync
-
-
+var writeFileAsync = Promise.promisify(fs.writeFile);
 
 var fetchProfileAndWriteToFile = function(readFilePath, writeFilePath) {
   // TODO
+  return pluckFirstLineFromFileAsync(readFilePath)
+    .then(function(username) {
+      return getGitHubProfileAsync(username);
+    })
+    .then(function(content) {
+      console.log(content);
+      return writeFileAsync(writeFilePath, JSON.stringify(content));
+    })
 };
 
 module.exports = {
